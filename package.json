@@ -1,0 +1,16 @@
+{
+  "name": "redsocial",
+  "version": "1.0.0",
+  "description": "Red social, proyecto Laboratoria",
+  "main": "src/js/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Fabian Bravo, Gonzalo Parra",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint-config-google": "^0.9.1",
+    "mocha": "^5.2.0"
+  }
+}
