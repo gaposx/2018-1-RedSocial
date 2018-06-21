@@ -1,20 +1,21 @@
-const addUserBtnClicked = () => {
-    const usersRef = dbRef.child('users');
-    const addUserInputsUI = document.getElementsByClassName("user-input");
-    // this object will hold the new user information
-    let newUser = {};
-    // loop through View to get the data for the model 
-    for (let i = 0, len = addUserInputsUI.length; i < len; i++) {
+const addPostBtnUI = document.getElementById("add-post-btn");
 
-        let key = addUserInputsUI[i].getAttribute('data-key');
-        let value = addUserInputsUI[i].value;
-        newUser[key] = value;
+const addPostBtnClicked = () => {
+    const postsRef = dbRef.child('posts/gaposx');
+    const addPostInputsUI = document.getElementsByClassName("post-input");
+    // this object will hold the new user information
+    
+    let newPost = {likes:0, edited:0};
+    // loop through View to get the data for the model 
+    for (let element of addPostInputsUI) {
+        let key = element.getAttribute('data-key');
+        let value = element.value;
+        newPost[key] = value;
     }
-    usersRef.push(newUser, function () {
+    postsRef.push(newPost, function () {
         console.log("data has been inserted");
     })
 }
 
-const addUserBtnUI = document.getElementById("add-user-btn");
-addUserBtnUI.addEventListener("click", addUserBtnClicked);
+addPostBtnUI.addEventListener("click", addPostBtnClicked);
 

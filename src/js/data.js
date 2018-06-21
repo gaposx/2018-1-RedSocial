@@ -1,3 +1,20 @@
+posts = {
+    addPost: () => {
+
+    },
+    removePost: () => {
+
+    },
+    updatePost: () => {
+
+    },
+    deletePost: () => {
+
+    },
+
+}
+
+
 let dbRef;
 
 const fetchJSON = (url, callback) => {
@@ -7,24 +24,28 @@ const fetchJSON = (url, callback) => {
         .catch((err) => console.log(err));
 };
 
-fetchJSON('js/firebase.json', (firebaseConfig) => {
+//http://softauthor.com/learn-to-build-firebase-crud-app-with-javascript-part01-reading-data/
+fetchJSON('/data/firebase.json', (firebaseConfig) => {
     firebase.initializeApp(firebaseConfig);
     dbRef = firebase.database().ref();
 
-    const usersRef = dbRef.child('users');
-    const userListUI = document.getElementById("userList");
+    const postsRef = dbRef.child('posts');
+    const postsListUI = document.getElementById("postsList");
 
-    usersRef.on("child_added", snap => {
-        let user = snap.val();
-        let li = document.createElement("li");
-        li.innerHTML = user.name;
-        li.setAttribute("child-key", snap.key);
-        li.addEventListener("click", userClicked)
-        userListUI.append(li);
+    postsRef.on("child_added", snap => {
+        for (let property in snap.val()) {
+            let li = document.createElement("li");
+            li.innerHTML = snap.val()[property].text + '(likes: ' +  snap.val()[property].likes + ')';
+            li.setAttribute("child-key", property);
+            // li.addEventListener("click", postClicked)
+            postsListUI.append(li);
+        }
+        
     });
 });
 
-const userClicked = e => {
+//http://softauthor.com/firebase-crud-javascript-web-tutorial-part-2-create-update-delete/
+const postClicked = e => {
     var userID = e.target.getAttribute("child-key");
 
     const userRef = dbRef.child('users/' + userID);

@@ -4,39 +4,39 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
         crossorigin="anonymous">
-    
+
 </head>
 
 <body>
-    <section id="show-user-module">
-        <ul id="userList"></ul>
+    <section id="show-posts-section">
+        <ul id="postsList"></ul>
 
-        <div id="userDetail">
-            <p>Name :
-                <strong class="detailName"></strong>
+        <div id="postDetail">
+            <p>Text :
+                <strong class="postDetailText"></strong>
             </p>
-            <p>Age:
-                <strong class="detailAge"></strong>
+            <p>Likes:
+                <strong class="postDetailLikes"></strong>
             </p>
-            <p>Email:
-                <strong class="detailEmail"></strong>
+            <p>Group:
+                <strong class="postDetailGroup"></strong>
+            </p>
+            <p>Edited:
+                <strong class="postDetailEdited"></strong>
             </p>
         </div>
     </section>
-    <section id="add-user-module">
+    <section id="add-post-section">
         <form>
-            <h2>Add User</h2>
-            name:
+            <h2>Add Post</h2>
+            Text:
             <br>
-            <input type='text' data-key='name' class='user-input'>
-            <br> age:
+            <input type='text' data-key='text' class='post-input'>
+            <br> group:
             <br>
-            <input type='text' data-key='age' class='user-input'>
-            <br> email:
+            <input type='text' data-key='group' class='post-input'>
             <br>
-            <input type='text' data-key='email' class='user-input'>
-            <br>
-            <button type='button' id="add-user-btn">add user</button>
+            <button type='button' id="add-post-btn">add user</button>
         </form>
     </section>
     <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
