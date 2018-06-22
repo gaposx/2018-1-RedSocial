@@ -22,6 +22,7 @@ window.onload = function() {
       const providerData = user.providerData;
       
       window.user = user;
+      console.log("User from github/firebase > "+JSON.stringify(user));
 
       changeUIToOnlineMode();
     } else {

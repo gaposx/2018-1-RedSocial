@@ -2,3 +2,11 @@
     height: 100vh;
     padding: 1em;
 }
+
+#messageSpace{
+    height: 80vh;
+}
+
+#bottomBar{
+    height: 20vh;
+}
