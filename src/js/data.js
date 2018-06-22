@@ -80,7 +80,7 @@ const getMembers = (callback) => {
 
 const getFriendship = (userId, callback) => {
     const friendshipRef = firebase.database().ref().child(`friendship/${userId}`);
-    friendshipRef.on("child_added", snap => {
+    friendshipRef.on("value", snap => {
         callback(snap);
     });
 }

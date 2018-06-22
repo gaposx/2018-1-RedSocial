@@ -25,6 +25,11 @@ window.onload = function () {
             window.user = user;
             // console.log("User from github/firebase > " + JSON.stringify(user));
 
+            getUsers(members => { window.members.push(members.val()); });
+            getFriendship(user.uid, friendship => { 
+                window.friends = friendship.val().friends; 
+            });
+
             createUser(user);
             changeUIToOnlineMode();
         } else {
@@ -33,6 +38,8 @@ window.onload = function () {
         }
     });
 
+    
+
     $('a[data-toggle="pill"]').on('shown.bs.tab', e => {
         if (e.target.id === 'v-pills-logout-tab') {
             logout();
@@ -40,52 +47,59 @@ window.onload = function () {
             const membersSpace = document.getElementById('membersSpace');
             // TODO: usar sólo nuevos de Firebase
             membersSpace.innerHTML = "";
-            
-            getUsers(members => { //Callback for new messages
-                window.members.push(members.val());
+
+            for (const member of members) {
                 const membersNodes = document.createElement("div");
                 membersNodes.className = 'row';
                 membersNodes.innerHTML = `
-                    <div class="col-1"><img class="img-fluid img-rounded" src=${members.val().avatar}/></div>
-                    <div class="col-4"><p>${members.val().name}</p></div>
-                    <div class="col-2"><input type="button" class="btn-info friendship-button" id="${members.val().id}" value="Seguir"></div>`;
+                    <div class="col-1"><img class="img-fluid img-rounded" src=${member.avatar}/></div>
+                    <div class="col-4"><p>${member.name}</p></div>
+                    <div class="col-2"><input type="button" class="btn-info friendship-button" id="${member.id}" value="Seguir"></div>`;
                 membersSpace.appendChild(membersNodes);
-            });
+            }
 
             // $(document).on('click','.friendship-button', (e) => {
             //     createFriendship(e.target.id);
             // });
 
-            getFriendship(user.uid, friendship => {
-                for (const iterator of friendship.val()) {
-                    const friendshipButton = $(`#${iterator}`);
-                    friendshipButton.val('Dejar de seguir');
-                    friendshipButton.removeClass('btn-info');
-                    friendshipButton.addClass('btn-danger');
-                }                
-            });
+            // getFriendship(user.uid, friendship => {
+            //     for (const iterator of friendship.val()) {
+            //         const friendshipButton = $(`#${iterator}`);
+            //         friendshipButton.val('Dejar de seguir');
+            //         friendshipButton.removeClass('btn-info');
+            //         friendshipButton.addClass('btn-danger');
+            //     }
+            // });
         } else if (e.target.id === 'v-pills-friends-tab') {
             const friendsSpace = document.getElementById('friendsSpace');
+            friendsSpace.innerHTML = "";
 
-            if(members.length === 0) {
-                getUsers(members => {
-                    window.members.push(members.val());
-                });
+            for (const friendId of friends) {
+                const friend = members.find(member => member.id === friendId );
+                const friendNodes = document.createElement("div");
+                friendNodes.className = 'row';
+                friendNodes.innerHTML = `
+                    <div class="col-1"><img class="img-fluid img-rounded" src=${friend.avatar}/></div>
+                    <div class="col-4"><p>${friend.name}</p></div>
+                    <div class="col-2"><input type="button" class="btn-info friendship-button" id="${friend.id}" value="Seguir"></div>`;
+                friendsSpace.appendChild(friendNodes);
             }
+
+
             
-            getFriendship(user.uid, friendship  => { //Callback for new messages
-                for (const friend of friendship.val()) {
-                    const currentUser = members.find(member => member.id === friend);
-                    const friendNodes = document.createElement("div");
-                    console.log(currentUser);
-                    friendNodes.className = 'row';
-                    friendNodes.innerHTML = `
-                        <div class="col-1"><img class="img-fluid img-rounded" src=${currentUser.avatar}/></div>
-                        <div class="col-4"><p>${currentUser.name}</p></div>
-                        <div class="col-2"><input type="button" class="btn-danger friendship-button" id="${currentUser.id}" value="Dejar de seguir"></div>`;
-                    friendsSpace.appendChild(friendNodes);
-                }
-            });
+            // getFriendship(user.uid, friendship  => { //Callback for new messages
+            //     for (const friend of friendship.val()) {
+            //         const currentUser = members.find(member => member.id === friend);
+            //         const friendNodes = document.createElement("div");
+            //         console.log(currentUser);
+            //         friendNodes.className = 'row';
+            //         friendNodes.innerHTML = `
+            //             <div class="col-1"><img class="img-fluid img-rounded" src=${currentUser.avatar}/></div>
+            //             <div class="col-4"><p>${currentUser.name}</p></div>
+            //             <div class="col-2"><input type="button" class="btn-danger friendship-button" id="${currentUser.id}" value="Dejar de seguir"></div>`;
+            //         friendsSpace.appendChild(friendNodes);
+            //     }
+            // });
         }
     });
 
