@@ -14,3 +14,9 @@
 .message{
     position: absolute;
 }
+
+.avatar{
+    overflow: hidden;
+    max-height: 6em;
+    margin: auto;
+}
