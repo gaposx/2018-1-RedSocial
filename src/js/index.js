@@ -24,6 +24,8 @@ window.onload = function () {
             window.user = user;
             console.log("User from github/firebase > " + JSON.stringify(user));
 
+            createUser(user);
+
             changeUIToOnlineMode();
         } else {
             console.log("User not signed in...");
@@ -34,6 +36,24 @@ window.onload = function () {
     $('a[data-toggle="pill"]').on('shown.bs.tab', e => {
         if (e.target.id === 'v-pills-logout-tab') {
             logout();
+        } else if (e.target.id === 'v-pills-members-tab') {
+
+            console.log('members');
+            const membersSpace = document.getElementById('membersSpace');
+            // TODO: usar sólo nuevos de Firebase
+            membersSpace.innerHTML = "";
+            
+            getUsers((members) => { //Callback for new messages
+                const membersNodes = document.createElement("div");
+                membersNodes.className = 'row';
+                membersNodes.innerHTML = `
+                    <div class="col-1"><img class="img-fluid img-rounded" src=${members.val().avatar}/></div>
+                    <div class="col-2"><p>${members.val().name}</p></div>
+                    <div class="col-2"><input type="button" id="${members.val().id}" value="Seguir"></div>`;
+
+                membersSpace.appendChild(membersNodes);
+            });
+            
         }
     });
 
@@ -69,9 +89,6 @@ window.onload = function () {
         messageSpace.appendChild(newMessageNode);
     });
 
-
-
-
     startAnimationLoop();
 };
 
@@ -105,6 +122,7 @@ function login() {
 
 function changeUIToOfflineMode() {
     $("#v-pills-home-tab").hide();
+    $("#v-pills-members-tab").hide();
     $("#v-pills-friends-tab").hide();
     $("#v-pills-logout-tab").hide();
     $("#v-pills-logout-tab").hide();
@@ -113,6 +131,7 @@ function changeUIToOfflineMode() {
 
 function changeUIToOnlineMode() {
     $("#v-pills-home-tab").show();
+    $("#v-pills-members-tab").show();
     $("#v-pills-friends-tab").show();
     $("#v-pills-logout-tab").show();
     $("#v-pills-login-tab").hide();

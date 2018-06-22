@@ -38,3 +38,32 @@ function startListeningNewMessages(callback) {
             console.error("Error while setting up message listener > " + err);
         });
 }
+
+const createUser = (user) => {
+    // debugger
+    const database = firebase.database();
+
+    const newUser = {
+        id: user.uid,
+        name: user.displayName,
+        email: user.emailVerified,
+        avatar: user.photoURL,
+    };
+
+    const newUserKey = user.uid;
+    database.ref(`/users/${newUserKey}`).update(newUser);
+}
+
+const getUsers = (callback) => {
+    const userRef = firebase.database().ref().child('users/');
+    userRef.on("child_added", snap => {
+        callback(snap);
+      });
+}
+
+const getFriendship = (callback) => {
+    const friendshipRef = firebase.database().ref().child('friendship/');
+    friendshipRef.on("child_added", snap => {
+        callback(snap);
+      });
+}
