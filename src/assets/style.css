@@ -10,3 +10,7 @@
 #bottomBar{
     height: 20vh;
 }
+
+.message{
+    position: absolute;
+}

@@ -60,7 +60,9 @@ window.onload = function() {
     // An error happened.
   });
   */
-}
+
+  startAnimationLoop();
+};
 
 function login(){
   const provider = new firebase.auth.GithubAuthProvider();
@@ -94,4 +96,29 @@ function changeUIToOnlineMode(){
   $("#v-pills-logout-tab").show();
   $("#v-pills-login-tab").hide();
   $("#v-pills-home-tab").tab('show');
+}
+
+//Setup animation loop
+function startAnimationLoop(){
+  setInterval(()=>{
+    const messages = Object.values(document.getElementsByClassName('message'));
+
+    messages.forEach(message => {
+      if(!message.style.opacity){
+        message.style.opacity = 1;
+      }
+      const newOpacity = message.style.opacity - 0.001;
+      message.style.opacity = newOpacity > 0 ? newOpacity : 0;
+
+      if(message.scale){
+        message.scale = message.scale - 0.001;
+        if(message.scale < 0){
+          message.scale = 0;
+        }
+        message.style.transform = `scale(${message.scale},${message.scale})`;
+      }else{
+        message.scale = 1;
+      }
+    });
+  }, 20);
 }
