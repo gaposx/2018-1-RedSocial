@@ -31,6 +31,11 @@ window.onload = function() {
     }
   });
 
+  //Setup data listeners
+
+  startListeningNewMessages((newMessage)=>{ //Callback for new messages
+    
+  });
     
 
       /*TODO: Log-out
