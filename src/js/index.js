@@ -34,17 +34,32 @@ window.onload = function() {
   //Setup data listeners
 
   startListeningNewMessages((newMessage)=>{ //Callback for new messages
-    
+    console.log("New message > "+newMessage.message);
+    const newMessageNode = document.createElement("div");
+    newMessageNode.id = `message_${newMessage.creationTime}`;
+    newMessageNode.className = `message`;
+    newMessageNode.innerHTML = `
+    <div class="card border-info mb-3" style="max-width: 18rem;">
+      <div class="card-header">
+        ${newMessage.creatorName}
+      </div>
+      <div class="card-body text-info">
+        <p class="card-text">${newMessage.message}</p>
+      </div>
+    </div>
+    `;
+
+    messageSpace.appendChild(newMessageNode);
   });
     
 
-      /*TODO: Log-out
-      firebase.auth().signOut().then(function() {
-        // Sign-out successful.
-      }).catch(function(error) {
-        // An error happened.
-      });
-      */
+  /*TODO: Log-out
+  firebase.auth().signOut().then(function() {
+    // Sign-out successful.
+  }).catch(function(error) {
+    // An error happened.
+  });
+  */
 }
 
 function login(){

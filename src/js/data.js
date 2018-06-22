@@ -27,6 +27,6 @@ function sendMessage(event){
 function startListeningNewMessages(callback){
   var starCountRef = firebase.database().ref('messages/');
   starCountRef.on('child_added', function(newMessage) {
-    console.log('New message found > '+JSON.stringify(newMessage));
+    callback(newMessage.val());
   });
 }
