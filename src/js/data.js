@@ -40,7 +40,6 @@ function startListeningNewMessages(callback) {
 }
 
 const createUser = (user) => {
-    // debugger
     const database = firebase.database();
 
     const newUser = {
@@ -54,6 +53,17 @@ const createUser = (user) => {
     database.ref(`/users/${newUserKey}`).update(newUser);
 }
 
+const createFriendship = (friendId) => {
+    const database = firebase.database();
+
+    const newFriendship = {
+        friends: [friendId]
+    };
+
+    const newFriendshipKey = user.uid;
+    database.ref(`/friendship/${newFriendshipKey}`).update(newFriendship);
+}
+
 const getUsers = (callback) => {
     const userRef = firebase.database().ref().child('users/');
     userRef.on("child_added", snap => {
@@ -61,9 +71,16 @@ const getUsers = (callback) => {
       });
 }
 
-const getFriendship = (callback) => {
-    const friendshipRef = firebase.database().ref().child('friendship/');
+const getMembers = (callback) => {
+    const friendshipRef = firebase.database().ref().child(`friendship/${userId}`);
     friendshipRef.on("child_added", snap => {
         callback(snap);
-      });
+    });
+}
+
+const getFriendship = (userId, callback) => {
+    const friendshipRef = firebase.database().ref().child(`friendship/${userId}`);
+    friendshipRef.on("child_added", snap => {
+        callback(snap);
+    });
 }

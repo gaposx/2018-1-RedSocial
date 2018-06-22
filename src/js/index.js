@@ -1,4 +1,5 @@
 window.user = null;
+window.members = [];
 
 window.onload = function () {
     var config = {
@@ -22,10 +23,9 @@ window.onload = function () {
             const providerData = user.providerData;
 
             window.user = user;
-            console.log("User from github/firebase > " + JSON.stringify(user));
+            // console.log("User from github/firebase > " + JSON.stringify(user));
 
             createUser(user);
-
             changeUIToOnlineMode();
         } else {
             console.log("User not signed in...");
@@ -37,23 +37,55 @@ window.onload = function () {
         if (e.target.id === 'v-pills-logout-tab') {
             logout();
         } else if (e.target.id === 'v-pills-members-tab') {
-
-            console.log('members');
             const membersSpace = document.getElementById('membersSpace');
             // TODO: usar sólo nuevos de Firebase
             membersSpace.innerHTML = "";
             
-            getUsers((members) => { //Callback for new messages
+            getUsers(members => { //Callback for new messages
+                window.members.push(members.val());
                 const membersNodes = document.createElement("div");
                 membersNodes.className = 'row';
                 membersNodes.innerHTML = `
                     <div class="col-1"><img class="img-fluid img-rounded" src=${members.val().avatar}/></div>
-                    <div class="col-2"><p>${members.val().name}</p></div>
-                    <div class="col-2"><input type="button" id="${members.val().id}" value="Seguir"></div>`;
-
+                    <div class="col-4"><p>${members.val().name}</p></div>
+                    <div class="col-2"><input type="button" class="btn-info friendship-button" id="${members.val().id}" value="Seguir"></div>`;
                 membersSpace.appendChild(membersNodes);
             });
+
+            // $(document).on('click','.friendship-button', (e) => {
+            //     createFriendship(e.target.id);
+            // });
+
+            getFriendship(user.uid, friendship => {
+                for (const iterator of friendship.val()) {
+                    const friendshipButton = $(`#${iterator}`);
+                    friendshipButton.val('Dejar de seguir');
+                    friendshipButton.removeClass('btn-info');
+                    friendshipButton.addClass('btn-danger');
+                }                
+            });
+        } else if (e.target.id === 'v-pills-friends-tab') {
+            const friendsSpace = document.getElementById('friendsSpace');
+
+            if(members.length === 0) {
+                getUsers(members => {
+                    window.members.push(members.val());
+                });
+            }
             
+            getFriendship(user.uid, friendship  => { //Callback for new messages
+                for (const friend of friendship.val()) {
+                    const currentUser = members.find(member => member.id === friend);
+                    const friendNodes = document.createElement("div");
+                    console.log(currentUser);
+                    friendNodes.className = 'row';
+                    friendNodes.innerHTML = `
+                        <div class="col-1"><img class="img-fluid img-rounded" src=${currentUser.avatar}/></div>
+                        <div class="col-4"><p>${currentUser.name}</p></div>
+                        <div class="col-2"><input type="button" class="btn-danger friendship-button" id="${currentUser.id}" value="Dejar de seguir"></div>`;
+                    friendsSpace.appendChild(friendNodes);
+                }
+            });
         }
     });
 
@@ -64,6 +96,8 @@ window.onload = function () {
     startAnimationLoop();
 };
 
+
+
 const logout = () => {
     // TODO: Log-out
     firebase.auth().signOut().then(function () {
@@ -71,7 +105,6 @@ const logout = () => {
     }).catch(function (error) {
         // An error happened.
     });
-
 }
 
 function login() {
@@ -87,7 +120,6 @@ function login() {
         const errorMessage = error.message;
         const email = error.email;
         const credential = error.credential;
-
         console.error("Login error > " + errorMessage);
         //TODO: implementar login error en interfaz
     });
@@ -97,7 +129,7 @@ function onNewMessage(newMessage) { //Callback for new messages
   const availableHeight = messageSpace.offsetHeight - 200;
   const availableWidth = messageSpace.offsetWidth - 200;
 
-  console.log("New message > " + newMessage.message);
+//   console.log("New message > " + newMessage.message);
   const newMessageNode = document.createElement("div");
   newMessageNode.id = `message_${newMessage.creationTime}`;
   newMessageNode.className = `message`;
