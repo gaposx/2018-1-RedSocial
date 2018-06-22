@@ -25,8 +25,16 @@ function sendMessage(event){
 }
 
 function startListeningNewMessages(callback){
-  var starCountRef = firebase.database().ref('messages/');
-  starCountRef.on('child_added', function(newMessage) {
-    callback(newMessage.val());
+  firebase.database().ref('/.info/serverTimeOffset')
+  .once('value')
+  .then((data) => {
+    const nowTimestamp = data.val() + Date.now(); //Time limit to ignore old messages
+    var starCountRef = firebase.database().ref('messages/');
+    starCountRef.on('child_added', function(newMessage) {
+      if(newMessage.val().creationTime > nowTimestamp)
+        callback(newMessage.val());
+    });
+  }, (err) => {
+    console.error("Error while setting up message listener > "+err);
   });
 }
