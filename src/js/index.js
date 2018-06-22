@@ -59,35 +59,7 @@ window.onload = function () {
 
     //Setup data listeners
 
-    startListeningNewMessages((newMessage) => { //Callback for new messages
-        const availableHeight = messageSpace.offsetHeight - 200;
-        const availableWidth = messageSpace.offsetWidth - 200;
-
-        console.log("New message > " + newMessage.message);
-        const newMessageNode = document.createElement("div");
-        newMessageNode.id = `message_${newMessage.creationTime}`;
-        newMessageNode.className = `message`;
-        newMessageNode.innerHTML = `
-    <div class="card border-info mb-3" style="max-width: 18rem;">
-      <div class="card-header">
-        ${newMessage.creatorName}
-      </div>
-      <div class="row">
-        <div class="col-3 avatar">
-          <img class="img-fluid img-rounded" src=${newMessage.creatorAvatar}/>
-        </div>
-        <div class="card-body text-info col-9">
-          <p class="card-text">${newMessage.message}</p>
-        </div>
-      </div>
-    </div>
-    `;
-
-        newMessageNode.style.top = availableHeight * Math.random();
-        newMessageNode.style.left = availableWidth * Math.random();
-
-        messageSpace.appendChild(newMessageNode);
-    });
+    startListeningNewMessages(onNewMessage);
 
     startAnimationLoop();
 };
@@ -109,6 +81,7 @@ function login() {
         const token = result.credential.accessToken;
         const user = result.user;
         changeUIToOnlineMode();
+        startListeningNewMessages(onNewMessage);
     }).catch(function (error) {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -118,6 +91,36 @@ function login() {
         console.error("Login error > " + errorMessage);
         //TODO: implementar login error en interfaz
     });
+}
+
+function onNewMessage(newMessage) { //Callback for new messages
+  const availableHeight = messageSpace.offsetHeight - 200;
+  const availableWidth = messageSpace.offsetWidth - 200;
+
+  console.log("New message > " + newMessage.message);
+  const newMessageNode = document.createElement("div");
+  newMessageNode.id = `message_${newMessage.creationTime}`;
+  newMessageNode.className = `message`;
+  newMessageNode.innerHTML = `
+  <div class="card border-info mb-3" style="max-width: 18rem;">
+    <div class="card-header">
+      ${newMessage.creatorName}
+    </div>
+    <div class="row">
+      <div class="col-3 avatar">
+        <img class="img-fluid img-rounded" src=${newMessage.creatorAvatar}/>
+      </div>
+      <div class="card-body text-info col-9">
+        <p class="card-text">${newMessage.message}</p>
+      </div>
+    </div>
+  </div>
+  `;
+
+  newMessageNode.style.top = availableHeight * Math.random();
+  newMessageNode.style.left = availableWidth * Math.random();
+
+  messageSpace.appendChild(newMessageNode);
 }
 
 function changeUIToOfflineMode() {
